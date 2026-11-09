@@ -1,0 +1,118 @@
+{
+  "default": {
+    "year1": {
+      "title": "Năm nhất",
+      "dialogue": [
+        "Hành trình bước chân vào đại học bắt đầu như thế này...",
+        "Mỗi ngày là một điều mới mẻ, và mình dần có thêm những người bạn.",
+        "Năm nhất trôi qua nhanh lắm. Mình đi tiếp nhé!"
+      ],
+      "photos": [
+        {
+          "src": "/images/y1/01.webp",
+          "caption": "Ngày đầu đến trường"
+        },
+        {
+          "src": "/images/y1/02.webp",
+          "caption": "Những người bạn đầu tiên"
+        },
+        {
+          "src": "/images/y1/03.webp",
+          "caption": "Giờ học đầu tiên"
+        },
+        {
+          "src": "/images/y1/04.webp",
+          "caption": "Kỷ niệm cuối năm"
+        }
+      ]
+    },
+    "year2": {
+      "title": "Năm hai",
+      "dialogue": [
+        "Năm hai, mọi thứ chạy nhanh hơn...",
+        "Mình lái đoàn tàu này qua từng kỷ niệm, bạn ngắm nhé!"
+      ],
+      "photos": [
+        {
+          "src": "/images/y2/01.webp",
+          "caption": "Toa 2: đồ án đầu tiên"
+        },
+        {
+          "src": "/images/y2/02.webp",
+          "caption": "Toa 3: những đêm chạy deadline"
+        },
+        {
+          "src": "/images/y2/03.webp",
+          "caption": "Toa 4: câu lạc bộ"
+        },
+        {
+          "src": "/images/y2/04.webp",
+          "caption": "Toa 5: chuyến đi cùng lớp"
+        }
+      ]
+    },
+    "year3": {
+      "title": "Năm ba",
+      "dialogue": [
+        "Năm ba, đường lên dốc hơn, nhưng mình không đi một mình...",
+        "Đoạn đầu ai cũng còn hăng lắm.",
+        "Có những hôm mệt thật, may mà luôn có người đi cùng.",
+        "Càng lên cao, nhìn lại càng thấy mình đã đi được xa.",
+        "Sắp tới đỉnh rồi, cố thêm chút nữa thôi.",
+        "Nhìn kìa, phía xa có một ánh sáng nhỏ. Chắc đó là chặng cuối của mình."
+      ],
+      "photos": [
+        {
+          "src": "/images/y3/01.webp",
+          "caption": "Đồ án lớn đầu tiên",
+          "altitude": "800 m"
+        },
+        {
+          "src": "/images/y3/02.webp",
+          "caption": "Những buổi họp nhóm tới khuya",
+          "altitude": "1.400 m"
+        },
+        {
+          "src": "/images/y3/03.webp",
+          "caption": "Kỳ thực tập đầu tiên",
+          "altitude": "2.000 m"
+        },
+        {
+          "src": "/images/y3/04.webp",
+          "caption": "Cùng nhau vượt qua",
+          "altitude": "2.600 m"
+        }
+      ]
+    },
+    "year4": {
+      "title": "Năm tư",
+      "dialogue": [
+        "Chặng cuối rồi, và mình vẫn còn thấy ánh sáng phía trước...",
+        "Những ngày cuối cùng ở trường trôi nhanh lạ thường.",
+        "Đồ án tốt nghiệp, những đêm thức trắng, và cả những người ở lại cùng mình.",
+        "Mỗi tấm ảnh là một bước mình không đi một mình.",
+        "Sắp tới nơi rồi, bạn thấy ngọn hải đăng kia không?",
+        "Tới nơi rồi. Có một lá thư ở đây dành cho bạn, mở ra nhé!"
+      ],
+      "photos": [
+        {
+          "src": "/images/y4/01.webp",
+          "caption": "Học kỳ cuối cùng"
+        },
+        {
+          "src": "/images/y4/02.webp",
+          "caption": "Đồ án tốt nghiệp"
+        },
+        {
+          "src": "/images/y4/03.webp",
+          "caption": "Ngày bảo vệ"
+        },
+        {
+          "src": "/images/y4/04.webp",
+          "caption": "Những người đã đi cùng mình"
+        }
+      ]
+    }
+  },
+  "albums": {}
+}

@@ -1,0 +1,28 @@
+.story {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--c-bg);
+  color: var(--c-silver-bright);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* The short change of scene: silver light with a sapphire sweep. Below the bar, above the scene. */
+.veil {
+  position: absolute;
+  inset: 0;
+  z-index: 54;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--c-silver-bright), var(--c-sapphire-ice));
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 18%, rgb(var(--c-sapphire-bright-rgb) / 0.42) 50%, transparent 82%);
+}

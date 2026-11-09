@@ -1,0 +1,159 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Sky (HTML layer, only opacity is animated) */
+.sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 120% 80% at 50% 22%,
+    var(--c-sky-glow) 0%,
+    var(--c-sky-mid) 48%,
+    var(--c-sky-edge) 100%
+  );
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- Scene 0 ---------- */
+
+.tapArea {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--c-silver-bright);
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tapArea:focus-visible .tapHint {
+  outline: 1.5px solid var(--c-silver);
+  outline-offset: 6px;
+}
+
+.tapHint {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgb(var(--c-blue-bright-rgb) / 0.6);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.tapMoon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--c-silver-bright);
+  box-shadow: 0 0 14px 3px rgb(var(--c-blue-bright-rgb) / 0.55);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Scene 1 ---------- */
+
+.bubbleAnchor {
+  position: absolute;
+  z-index: 15;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.bubbleInner {
+  transform-origin: 50% 100%;
+}
+
+/* Initially hidden — GSAP reveals it */
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ---------- Placeholder ---------- */
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 30%, var(--c-sky-glow), var(--c-sky-edge) 70%);
+  animation: fadeIn 0.6s ease-out both;
+}
+
+.placeholderBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.placeholderMoon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 32%, var(--c-sapphire-pale), var(--c-blue) 45%, var(--c-sapphire) 85%);
+  box-shadow: 0 0 40px 8px rgb(var(--c-blue-rgb) / 0.35);
+}
+
+.placeholderTitle {
+  margin: 0;
+  font-size: 28px;
+  color: var(--c-silver-bright);
+}
+
+.placeholderNote {
+  margin: 0;
+  color: var(--c-silver);
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tapHint {
+    animation: none;
+    opacity: 0.9;
+  }
+  .placeholder {
+    animation: none;
+  }
+}

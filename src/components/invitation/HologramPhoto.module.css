@@ -1,0 +1,123 @@
+/* The frame stands off the card, so the tilt gives a little parallax */
+.frame {
+  position: relative;
+  width: 100%;
+  transform: translateZ(28px);
+  transform-style: preserve-3d;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Wider than the frame: a photo may be broader than the full-length one, and the stripes must reach it */
+.layer {
+  position: absolute;
+  inset: 0 -45%;
+  will-change: opacity;
+}
+
+/* All three stand on the frame's floor and scale from their feet */
+.image {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  transform-origin: 50% 100%;
+  will-change: transform;
+  filter: drop-shadow(-4px 6px 8px rgb(var(--c-card-ink-rgb) / 0.22));
+}
+
+/* Frosted label at the frame's top-left corner, reaching out into the empty space beside it:
+   on the full-length photo the frame's own corner is the narrator's head */
+.chip {
+  position: absolute;
+  z-index: 2;
+  right: 78%;
+  top: 2cqi;
+  padding: 1cqi 2.2cqi 0.4cqi;
+  border: 1px solid rgb(var(--c-white-rgb) / 0.55);
+  border-radius: 10px;
+  background: rgb(var(--c-white-rgb) / 0.42);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: 0 4px 12px -6px rgb(var(--c-shadow-rgb) / 0.5);
+  transform: translateZ(14px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.chip[data-on="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: max(13px, 3.9cqi);
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+}
+
+/* Small marks, in tap targets large enough for a thumb */
+.dot,
+.replay {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dotMark {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(var(--c-card-accent-rgb) / 0.32);
+  transition:
+    background-color 0.25s,
+    transform 0.25s;
+}
+
+.dotMark[data-on="true"] {
+  background: var(--c-sapphire);
+  transform: scale(1.2);
+}
+
+.replay {
+  margin-left: 2px;
+  color: var(--accent);
+}
+
+.dot:focus-visible,
+.replay:focus-visible {
+  outline: 2px solid var(--c-sapphire);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    transform: none;
+  }
+  .chip {
+    transition: none;
+  }
+}

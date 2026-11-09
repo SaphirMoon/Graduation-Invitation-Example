@@ -1,0 +1,64 @@
+.bubble {
+  position: relative;
+  width: max-content;
+  max-width: min(72vw, 290px);
+  padding: 12px 18px 14px;
+  color: var(--c-silver-bright);
+}
+
+/* Hand-drawn frame: filled shape + a fine stroke + a faint offset "second pass" */
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fill {
+  fill: rgb(var(--c-surface-rgb) / 0.92);
+}
+
+.line,
+.lineEcho {
+  fill: none;
+  stroke: var(--c-silver);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineEcho {
+  opacity: 0.3;
+}
+
+.tail {
+  position: absolute;
+  /* --tail-shift lets a positioned parent aim the tail away from center */
+  left: calc(50% - 11px + var(--tail-shift, 0px));
+  bottom: -12px;
+  width: 22px;
+  height: 14px;
+  overflow: visible;
+}
+
+.speaker {
+  position: relative;
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--c-mint);
+  text-align: left;
+}
+
+.text {
+  position: relative;
+  margin: 0;
+  font-size: clamp(14.5px, 3.9vw, 16px);
+  line-height: 1.5;
+  text-align: left;
+}

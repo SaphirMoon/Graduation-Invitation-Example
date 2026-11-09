@@ -1,0 +1,22 @@
+{
+  "": {
+    "name": "quý anh/chị",
+    "self": "em/mình"
+  },
+  "ban-a": {
+    "name": "bạn A",
+    "self": "mình"
+  },
+  "anh-b": {
+    "name": "anh B",
+    "self": "em"
+  },
+  "cot": {
+    "name": "cả nhóm",
+    "self": "mình"
+  },
+  "cot/c": {
+    "name": "bạn C",
+    "self": "mình"
+  }
+}

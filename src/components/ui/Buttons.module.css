@@ -1,0 +1,121 @@
+.next {
+  position: absolute;
+  z-index: 25;
+  /* Centered without transform so GSAP is free to animate y/scale */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 30px);
+  padding: 10px 26px 11px;
+  border-radius: 2px;
+  border: 1px solid rgb(var(--c-silver-rgb) / 0.55);
+  background: rgb(var(--c-surface-rgb) / 0.55);
+  color: var(--c-silver-bright);
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.next:hover,
+.next:focus-visible {
+  border-color: var(--c-silver-bright);
+  background: rgb(var(--c-slate-rgb) / 0.5);
+  outline: none;
+}
+
+.skip {
+  position: absolute;
+  z-index: 40;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 16px;
+  padding: 6px 2px;
+  border: 0;
+  border-bottom: 1px solid rgb(var(--c-silver-rgb) / 0.35);
+  background: transparent;
+  color: rgb(var(--c-silver-rgb) / 0.75);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  /* Stays readable over bright snow */
+  text-shadow: 0 1px 5px rgb(var(--c-shadow-rgb) / 0.85);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.skip:hover,
+.skip:focus-visible {
+  color: var(--c-silver-bright);
+  border-color: var(--c-silver);
+  outline: none;
+}
+
+.sound {
+  position: absolute;
+  z-index: 40;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgb(var(--c-silver-rgb) / 0.3);
+  border-radius: 50%;
+  background: rgb(var(--c-surface-rgb) / 0.35);
+  color: rgb(var(--c-silver-rgb) / 0.8);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound:hover,
+.sound:focus-visible {
+  color: var(--c-silver-bright);
+  border-color: var(--c-silver);
+  outline: none;
+}
+
+.skipIcon {
+  display: none;
+}
+
+/* Phones: both corners become small icons on the same row as the navigation bar (10px gap at 360px) */
+@media (max-width: 600px) {
+  .sound,
+  .skip {
+    top: calc(env(safe-area-inset-top, 0px) + 13px);
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgb(var(--c-silver-rgb) / 0.3);
+    border-radius: 50%;
+    background: rgb(var(--c-surface-rgb) / 0.35);
+  }
+  .sound {
+    left: 6px;
+  }
+  .sound svg {
+    width: 15px;
+    height: 15px;
+  }
+  .skip {
+    right: 6px;
+    color: rgb(var(--c-silver-rgb) / 0.85);
+  }
+  .skipIcon {
+    display: block;
+  }
+  .skipLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}

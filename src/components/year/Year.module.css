@@ -1,0 +1,446 @@
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--c-surface);
+  --hand: var(--font-hand), var(--font-hand-alt), cursive;
+}
+
+.root canvas {
+  display: block;
+}
+
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: var(--c-slate);
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+.coverHidden {
+  opacity: 0;
+}
+
+/* Year title, over the sky while the camera drifts down */
+.title {
+  position: absolute;
+  z-index: 14;
+  left: 0;
+  right: 0;
+  top: 17%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(34px, 9vw, 54px);
+  color: var(--c-silver-bright);
+  text-shadow: 0 2px 22px rgb(var(--c-shadow-rgb) / 0.55);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ---------- Speech bubbles (the anchor is moved every frame from the 3D scene) ---------- */
+
+.bubbleAnchor {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.bubbleOffset {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.bubble {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Sits below the photos, not over their captions */
+.root .nextCompact {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+  padding: 7px 20px 8px;
+  font-size: 16px;
+}
+
+/* Handwritten caption under the car the camera rides with */
+.trainCaption {
+  position: absolute;
+  z-index: 14;
+  left: 12px;
+  right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12%);
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.trainCaption span {
+  overflow-wrap: anywhere;
+  display: inline-block;
+  text-wrap: balance;
+  padding: 7px 18px 8px;
+  border-radius: 8px;
+  background: rgb(var(--c-surface-rgb) / 0.78);
+  font-family: var(--hand);
+  font-size: clamp(16px, 4.4vw, 24px);
+  line-height: 1.8;
+  color: var(--c-silver-bright);
+}
+
+@media (orientation: landscape) {
+  .trainCaption {
+    bottom: 7%;
+  }
+}
+
+.altitude {
+  display: block;
+  font-family: var(--font-main), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  color: var(--c-gold);
+}
+
+/* Whiteout in the gust (only ever partial: the scene stays visible) */
+.gustHaze {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: var(--c-moonlight);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Until the first frame only: same night as the end of the previous scene */
+.coverNight {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: var(--c-sky-edge);
+  transition: opacity 0.25s linear;
+  pointer-events: none;
+}
+
+/* Year 3: below the seated narrator, just above the button */
+.stationCaption {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 70px);
+}
+
+/* Wide screens: beside the ice block, so it never covers the seated narrator */
+@media (orientation: landscape) {
+  .stationCaption {
+    right: 64%;
+    bottom: 12%;
+  }
+}
+
+/* The previous year's silver mist clearing into this scene */
+.coverMist {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: var(--c-moonlight);
+  transition: opacity 2.4s ease-out;
+  pointer-events: none;
+}
+
+/* ---------- Silver fade at the end of the year ---------- */
+
+.fade {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: var(--c-moonlight);
+  visibility: hidden;
+  opacity: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  list-style: none;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 16px 28px;
+  background: rgb(var(--c-surface-rgb) / 0.86);
+  animation: lightboxIn 0.22s ease-out both;
+}
+
+.lightboxFrame {
+  margin: 0;
+  width: min(100%, 560px, calc((100vh - 170px) * 0.86));
+  padding: 3.4% 3.4% 0;
+  background: var(--c-polaroid-paper);
+  border-radius: 2px;
+  box-shadow: 0 30px 60px -20px rgb(var(--c-shadow-rgb) / 0.8);
+  transform: rotate(-0.7deg);
+}
+
+.lightboxPhoto {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.lightboxPhoto img {
+  object-fit: contain;
+}
+
+.lightboxCaption {
+  overflow-wrap: anywhere;
+  padding: 14px 8px 18px;
+  text-align: center;
+  font-family: var(--hand);
+  font-size: clamp(17px, 4.6vw, 24px);
+  line-height: 1.7;
+  color: var(--c-polaroid-ink);
+}
+
+.lightboxClose {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: 14px;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  padding: 11px;
+  border: 1px solid rgb(var(--c-silver-rgb) / 0.55);
+  border-radius: 50%;
+  background: rgb(var(--c-surface-rgb) / 0.7);
+  color: var(--c-silver-bright);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lightboxClose:hover,
+.lightboxClose:focus-visible {
+  border-color: var(--c-silver-bright);
+  background: rgb(var(--c-slate-rgb) / 0.6);
+  outline: none;
+}
+
+/* Sized by the video's own shape: wide or tall, it always fits between the close button and the caption */
+.lightboxForVideo {
+  background: rgb(var(--c-surface-rgb) / 0.95);
+}
+
+.lightboxVideoFrame {
+  margin: 0;
+  width: min(100%, 880px, calc((100dvh - 170px) * var(--video-ratio)));
+}
+
+.lightboxVideo {
+  position: relative;
+  aspect-ratio: var(--video-ratio);
+  overflow: hidden;
+  border-radius: 6px;
+  background: rgb(var(--c-shadow-rgb));
+  box-shadow: 0 30px 60px -20px rgb(var(--c-shadow-rgb) / 0.8);
+}
+
+.lightboxVideo video {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lightboxVideo img {
+  object-fit: contain;
+}
+
+.lightboxVideoCaption {
+  overflow-wrap: anywhere;
+  padding: 10px 8px 0;
+  text-align: center;
+  font-family: var(--hand);
+  font-size: clamp(16px, 4.2vw, 22px);
+  line-height: 1.5;
+  color: var(--c-silver-bright);
+}
+
+.videoStatus {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  text-wrap: balance;
+  color: var(--c-silver-bright);
+  background: rgb(var(--c-surface-rgb) / 0.68);
+}
+
+.videoSpinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgb(var(--c-silver-rgb) / 0.3);
+  border-top-color: var(--c-silver-bright);
+  border-radius: 50%;
+  animation: videoSpin 0.9s linear infinite;
+}
+
+.videoRetry {
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid rgb(var(--c-silver-rgb) / 0.55);
+  border-radius: 22px;
+  background: rgb(var(--c-slate-rgb) / 0.6);
+  color: var(--c-silver-bright);
+  font: inherit;
+  cursor: pointer;
+}
+
+@keyframes videoSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lightboxIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Without WebGL ---------- */
+
+.flat {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 64px 16px 32px;
+  background: linear-gradient(180deg, var(--c-sky-edge), var(--c-sky-mid) 50%, var(--c-slate));
+  color: var(--c-silver-bright);
+  --hand: var(--font-hand), var(--font-hand-alt), cursive;
+}
+
+.flatTitle {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 38px;
+}
+
+.flatLine {
+  margin: 0;
+  max-width: 460px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.flatGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: min(100%, 620px);
+}
+
+.flatPhoto {
+  display: block;
+  padding: 7px 7px 0;
+  border: 0;
+  border-radius: 2px;
+  background: var(--c-polaroid-paper);
+  cursor: zoom-in;
+}
+
+.flatImage {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.flatPlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  color: var(--c-silver-bright);
+  text-shadow: 0 0 4px rgb(var(--c-shadow-rgb)), 0 0 16px var(--c-silver-bright);
+}
+
+.flatImage img {
+  object-fit: cover;
+}
+
+.flatCaption {
+  display: block;
+  padding: 8px 2px 10px;
+  font-family: var(--hand);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-polaroid-ink);
+}
+
+.flatNext {
+  padding: 10px 26px 11px;
+  border: 1px solid rgb(var(--c-silver-rgb) / 0.55);
+  background: rgb(var(--c-surface-rgb) / 0.55);
+  color: var(--c-silver-bright);
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox {
+    animation: none;
+  }
+}

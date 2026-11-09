@@ -1,0 +1,160 @@
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--c-surface);
+}
+
+.root canvas {
+  display: block;
+}
+
+/* ---------- Loading cover (matches the velvet curtain) ---------- */
+
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18vh;
+  background:
+    linear-gradient(180deg, rgb(var(--c-shadow-rgb) / 0.45), transparent 30%, transparent 70%, rgb(var(--c-shadow-rgb) / 0.5)),
+    repeating-linear-gradient(90deg, var(--c-curtain-dark) 0, var(--c-curtain-mid) 6vw, var(--c-curtain-light) 7vw, var(--c-curtain-mid) 8vw, var(--c-curtain-dark) 14vw);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.coverHidden {
+  opacity: 0;
+}
+
+.loader {
+  width: 32px;
+  height: 1px;
+  background: var(--c-silver);
+  opacity: 0.6;
+  animation: loader 1.4s ease-in-out infinite;
+}
+
+@keyframes loader {
+  0%,
+  100% {
+    transform: scaleX(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 0.8;
+  }
+}
+
+/* ---------- Tap to open ---------- */
+
+.tapArea {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--c-silver-bright);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tapArea:disabled {
+  cursor: progress;
+}
+
+.tapHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  /* Slightly below center — avoids the "perfectly centered" template look */
+  transform: translateY(9vh);
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: clamp(22px, 6vw, 30px);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 18px rgb(var(--c-shadow-rgb) / 0.6);
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+
+.tapHintOn {
+  opacity: 1;
+  animation: breathe 2.8s ease-in-out 1s infinite;
+}
+
+.ornament {
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-silver));
+}
+
+.ornament:last-child {
+  background: linear-gradient(90deg, var(--c-silver), transparent);
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ---------- Speech bubble (anchor is moved every frame from the 3D scene) ---------- */
+
+.bubbleAnchor {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.bubbleOffset {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.bubbleInner {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tapHintOn,
+  .loader {
+    animation: none;
+  }
+}
+
+/* ---------- Impact flash ---------- */
+
+.flash {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  background: radial-gradient(circle at 30% 25%, var(--c-white) 0%, var(--c-moonlight) 35%, rgb(var(--c-sapphire-pale-rgb) / 0.85) 100%);
+}

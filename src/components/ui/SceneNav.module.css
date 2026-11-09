@@ -1,0 +1,243 @@
+.nav {
+  --spring: linear(0, 0.18 7%, 0.58 17%, 0.98 29%, 1.1 37%, 1.09 45%, 1.02 57%, 0.985 70%, 1);
+  --bar: 44px;
+  --edge: 4px;
+  /* Above the scene and its loading covers, below an open lightbox */
+  position: absolute;
+  z-index: 55;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
+  height: var(--bar);
+  padding: var(--edge);
+  animation: navIn 0.5s ease-out both;
+}
+
+.glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  /* Tinted just enough to keep the labels readable over bright snow as well as the night sky */
+  background: linear-gradient(180deg, rgb(var(--c-sky-mid-rgb) / 0.3), rgb(var(--c-sky-mid-rgb) / 0.42));
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  box-shadow:
+    inset 0 1px 1px rgb(var(--c-white-rgb) / 0.3),
+    inset 0 -6px 10px -8px rgb(var(--c-white-rgb) / 0.18),
+    0 10px 28px -10px rgb(var(--c-shadow-rgb) / 0.6);
+}
+
+/* The 1px rim: bright along the top, almost gone at the bottom */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgb(var(--c-white-rgb) / 0.7), rgb(var(--c-white-rgb) / 0.16) 48%, rgb(var(--c-white-rgb) / 0.05));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* Beside the glass, not inside it: an element with a backdrop filter would hide the scene from the lens */
+.lens {
+  position: absolute;
+  left: var(--edge);
+  top: var(--edge);
+  height: calc(var(--bar) - 2 * var(--edge));
+  border-radius: 999px;
+  transition:
+    transform 0.56s var(--spring),
+    width 0.56s var(--spring);
+  pointer-events: none;
+}
+
+.lensFill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgb(var(--c-white-rgb) / 0.3), rgb(var(--c-white-rgb) / 0.12));
+  -webkit-backdrop-filter: blur(6px) brightness(1.2);
+  backdrop-filter: blur(6px) brightness(1.2);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--c-white-rgb) / 0.55),
+    inset 0 -1px 1px rgb(var(--c-white-rgb) / 0.12),
+    0 3px 8px -3px rgb(var(--c-shadow-rgb) / 0.5);
+}
+
+.lensEdge {
+  display: none;
+}
+
+/* Light bending at the lens's rim, where the browser can do it */
+.nav[data-refract="true"] .lensEdge {
+  display: block;
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  border-radius: inherit;
+  -webkit-backdrop-filter: url(#nav-refract) brightness(1.15);
+  backdrop-filter: url(#nav-refract) brightness(1.15);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.items {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+
+.item {
+  flex: none;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: transparent;
+  color: rgb(var(--c-white-rgb) / 0.78);
+  font: inherit;
+  cursor: pointer;
+  text-shadow: 0 1px 4px rgb(var(--c-shadow-rgb) / 0.55);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    width 0.56s var(--spring),
+    color 0.25s,
+    transform 0.25s var(--spring);
+}
+
+.item[aria-current] {
+  color: var(--c-white);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--c-sapphire-ice);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .item:hover {
+    color: var(--c-white);
+    transform: scale(1.08);
+  }
+}
+
+.itemInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.text {
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.number {
+  font-size: 13.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.icon {
+  flex: none;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.defs {
+  position: absolute;
+}
+
+/* Phones: numbers and icons, with only the current stop spelled out */
+.nav[data-compact="true"] {
+  --bar: 40px;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+}
+
+.nav[data-compact="true"] .text {
+  font-size: 12.5px;
+}
+
+/* Where glass can't be trusted, a plain tint keeps the labels readable */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgb(var(--c-sky-mid-rgb) / 0.92);
+  }
+  .lensFill {
+    background: rgb(var(--c-white-rgb) / 0.2);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: rgb(var(--c-sky-mid-rgb) / 0.96);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .lensFill {
+    background: rgb(var(--c-white-rgb) / 0.2);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .lensEdge {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    animation: none;
+  }
+  .lens,
+  .item {
+    transition: color 0.2s;
+  }
+  .item:hover {
+    transform: none;
+  }
+}
+
+@keyframes navIn {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
