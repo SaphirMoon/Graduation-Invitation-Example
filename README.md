@@ -1,140 +1,179 @@
-# Thư mời tốt nghiệp — câu chuyện có animation
+# Graduation Invitation
 
-Next.js (App Router) + TypeScript + GSAP + React Three Fiber (three.js).
+An animated graduation invitation that tells a story before it hands over the card. A guide walks
+the guest through four years of university as four 3D scenes, then a sealed envelope opens into an
+invitation written to that guest by name.
 
-Giai đoạn hiện tại: **phần mở đầu 3D** (Cảnh 0 rèm + Cảnh 1 trăng sapphire, chạy liền một cú máy). Cảnh 2–6 đang là placeholder.
-Máy không hỗ trợ WebGL sẽ tự dùng bản SVG phẳng cũ.
+Built with Next.js (App Router), TypeScript, GSAP and React Three Fiber (three.js). The on-screen
+text is in Vietnamese; all of it lives in a few config files, so it can be rewritten in any language.
 
-## Chạy local
+## The story
+
+| Scene | What happens |
+|---|---|
+| Prologue | A curtain opens on a moonlit valley; a crystal shatters into the moon and turns it sapphire |
+| Year 1 | A boat on a lake at night; photos land on the water as polaroids |
+| Year 2 | A high-speed train through space; each car shows one photo |
+| Year 3 | A fall through the clouds, then a climb up a snow mountain past photos in ice |
+| Year 4 | A bridge of light builds out to a lighthouse island, with photo boards along it |
+| Invitation | An envelope in the moonbeam opens into the card |
+
+A glass navigation bar lets guests jump between scenes, and every link keeps its place
+(`/your-guest#nam-3`). Without WebGL, or with reduced motion turned on, each scene falls back to a
+calm 2D version.
+
+On the card, the photo is a lenticular print: tilt the phone, move the mouse or swipe, and the
+graduate grows up across three photos.
+
+## Getting started
+
+Requires Node.js 20 or later and pnpm.
 
 ```bash
 pnpm install
-pnpm dev             # mở http://localhost:3000
+pnpm dev            # http://localhost:3000
 ```
 
-- `/` — bản chung: dùng mục có khóa rỗng `""` trong `src/data/guests.json` (tên và album ảnh)
-- `/huy`, `/lan`, `/minh` — link riêng (khai báo trong `src/data/guests.json`)
-- `/bat-ky-gi` — slug không có trong danh sách → bản chung
+- `/` is the general version, for anyone.
+- `/ban-a`, `/anh-b` are personal links, declared in `src/data/guests.json`.
+- `/cot/c` is a person in a group that shares one album.
+- Any other path shows the general version.
 
-Build thử như trên Vercel: `pnpm build && pnpm start`.
+Try a production build with `pnpm build && pnpm start`.
 
-## Xem trên điện thoại (cùng wifi)
+**On a phone, on the same Wi-Fi:** run `pnpm dev:lan`, find your computer's local IP address, and
+open `http://<that IP>:3000` on the phone. Private address ranges are allowed in `next.config.ts`.
 
-1. Chạy `pnpm dev:lan` (dev server lắng nghe mọi địa chỉ mạng).
-2. Lấy IP máy tính: mở PowerShell, gõ `ipconfig`, tìm dòng **IPv4 Address** của card Wi-Fi (ví dụ `192.168.1.23`).
-3. Trên điện thoại mở `http://192.168.1.23:3000/huy`.
-4. Nếu không vào được: Windows Firewall có thể hỏi quyền cho Node.js, chọn **Allow** (mạng Private). IP nội bộ dạng `192.168.*`, `10.*`, `172.*` đã được cho phép trong `next.config.ts` (`allowedDevOrigins`).
+## Make it yours
 
-## Deploy Vercel
+### Your details
 
-Import repo vào Vercel, không cần cấu hình thêm. Nên đặt biến môi trường `NEXT_PUBLIC_SITE_URL` = domain thật (ví dụ `https://thumoi.vercel.app`), để ảnh xem trước khi gửi link (Open Graph) có URL đúng.
+`src/config/invitation.ts` holds the card: date and time, place, map link, the wish, the signature,
+the calendar file and an optional RSVP button. The weekday is worked out from the date.
 
-## Tham số có thể chỉnh
+`src/config/story.ts` holds the rest of the text: dialogue, buttons and the link preview's title.
 
-| Muốn đổi | File | Ghi chú |
-|---|---|---|
-| Thời lượng 7 đoạn của phần mở đầu 3D | `src/config/timing.ts` → `PROLOGUE_TIMING` | curtain, flight, beam, crystal, shatter, reveal, greet. Bước con co giãn theo |
-| Nhịp thở của trăng, chớp mắt, thời gian vẫy tay | `src/config/timing.ts` → `IDLE_TIMING` | |
-| Độ dài bản giảm chuyển động | `src/config/timing.ts` → `REDUCED_TOTAL` | |
-| **Toàn bộ màu sắc** (3D, thiệp, nút, bản SVG, ảnh OG) | `src/config/theme.ts` → `THEME` | Sửa một chỗ là đổi cả thế giới. Sapphire chỉ dành cho trăng xanh, pha lê, mảnh vỡ và tia sáng |
-| **Năm 1:** tiêu đề, thoại, ảnh + caption | `src/data/memories.json` | Ảnh WebP, cạnh dài ~1200px, tối đa 8 ảnh mỗi năm. Thoại: câu đầu mở đầu, câu cuối kết, các câu giữa rải đều giữa các ảnh |
-| Nhịp cảnh năm (chèo, thời gian chờ, ảnh bay, chuyển cảnh) | `src/components/year/yearTimeline.ts` → `YEAR_TIMING` | |
-| Vị trí thuyền, chỗ ảnh đáp và chỗ ảnh trôi tới, cỡ ảnh, camera hồ | `src/components/three/lake/lakeState.ts` | `BOAT_SPOT`, `heroSpot`, `SLOTS`, `PHOTO`, `LAKE_CAMERA` |
-| Sóng nước, vệt trăng, vệt đèn lồng | `src/components/three/lake/Water.tsx` | Shader trong `FRAG` |
-| **Năm 2:** tiêu đề, thoại, ảnh + caption (mỗi ảnh một toa) | `src/data/memories.json` → `default.year2` | Ảnh bỏ vào `public/images/y2/`. Mọi câu thoại được nói lúc camera bám đầu tàu; số toa tự theo số ảnh |
-| Nhịp tàu | `src/components/year/spaceTimeline.ts` → `SPACE_TIMING` | `hold` = giây khóa mỗi toa, `transfer` / `transferSpeed` = cú vọt sang toa kế. Timeline chỉ tween `trainSpeed`, `cameraTarget`, `cameraBlend`, `cameraRelease` |
-| Tốc độ gốc, độ uốn đường ray, kích thước toa, góc camera dọc/ngang, số sao và hạt theo hạng máy | `src/components/three/space/spaceState.ts` | `BASE_SPEED`, `trackY` / `trackZ` (sửa cả `TRACK_GLSL`), `TRAIN`, `SPACE_CAMERA`, `SPACE_BUDGET` |
-| Hành tinh, cực quang, biển mây, cột sáng, các lớp sao, vị trí trăng nhỏ | `src/components/three/space/Cosmos.tsx` | `PLANETS`, `MOON_DIR`; màu ở `world.space` trong `theme.ts` |
-| **Năm 3:** tiêu đề, thoại, ảnh + caption + độ cao | `src/data/memories.json` → `default.year3` | Ảnh bỏ vào `public/images/y3/` (hiển thị cắt vuông). Câu đầu: chân núi, các câu giữa: mỗi trạm một câu, câu cuối: đỉnh núi |
-| Nhịp Năm 3 (rơi xuyên mây, leo, trạm, gió tuyết, đỉnh) | `src/components/year/snowTimeline.ts` → `SNOW_TIMING` | `holdStation`, `leg`, `gust`, `gustLength` |
-| Hình núi, đường leo, vị trí trạm, camera, số hạt | `src/components/three/snow/snowState.ts` | `PEAK`, `SWITCHBACKS`, `STATION_U`, `SNOW_CAMERA`, `SNOW_BUDGET` |
-| Màu núi tuyết, băng, đèn, cờ, trang phục người dẫn | `src/config/theme.ts` → `world.snow3` | |
-| **Năm 4:** tiêu đề, thoại, ảnh + caption | `src/data/memories.json` → `default.year4` | Ảnh bỏ vào `public/images/y4/` (hiển thị cắt vuông, tối đa 4 ảnh). Câu đầu: mở đầu, các câu giữa: mỗi bảng ảnh một câu, câu cuối: trên đảo |
-| Nhịp Năm 4 (đèn, tia sáng, dựng cầu, tốc độ đi, thời gian ở mỗi ảnh) | `src/components/year/bridgeTimeline.ts` → `BRIDGE_TIMING` | `build`, `speed`, `holdBoard` |
-| Đường cầu, vị trí đảo và bảng ảnh, camera, số đèn | `src/components/three/bridge/bridgeState.ts` | `CURVE`, `ISLAND`, `BOARD_U`, `BRIDGE_CAMERA`, `BRIDGE_BUDGET` |
-| Màu cầu, đảo, hải đăng, đèn trời | `src/config/theme.ts` → `world.bridge` | |
-| Ánh sáng, sương, bloom, vignette, film grain | `src/config/theme.ts` → `GRADE` | `hemi` / `fill` là độ sáng đất, `rimGround` / `rimRock` là viền sáng phía trăng, `skyMist` / `skyMistWarm` là dải chân trời. Năm 1 dùng `GRADE.lake` |
-| Màu riêng của Năm 1, Năm 2 | `src/config/theme.ts` → `world.lake`, `world.space` | Cảnh 0, 1 và thiệp dùng các giá trị còn lại trong `world` |
-| Đường đi con suối | `src/config/world.ts` → `STREAM` | Các điểm `[x, z]` |
-| Đường bay camera, điểm nhìn, độ nghiêng, FOV dọc/ngang | `src/config/world.ts` → `CAMERA` | `path` là các điểm CatmullRom |
-| Vị trí / độ cao ngọn đồi chính, hình thung lũng | `src/config/world.ts` → `HILL`, `terrainHeight` | |
-| Vị trí trăng (lệch trái / độ cao) | `src/config/world.ts` → `placeMoon` | |
-| Số sao, đom đóm, cỏ, đá, bụi (theo hạng máy) | `src/config/world.ts` → `BUDGET` | `high` / `low` |
-| Chromatic aberration | `src/components/three/Effects.tsx` | `CA_BASE` / `CA_SPIKE` = độ lệch màu lúc thường / lúc va chạm |
-| Nhịp VFX lúc va chạm (hit-stop, flash, xoáy mảnh, bùng sáng, bụi tuyết) | `src/components/three/prologueTimeline.ts` → đoạn 5 | `HIT_STOP`, `SPIRAL` (thời gian mảnh văng + xoay + lao vào). Tăng `SPIRAL` thì tăng `shatter` trong `timing.ts` tương ứng |
-| Số mảnh vỡ, số vòng xoay quanh trăng, độ nghiêng vành xoáy | `src/components/three/shards.ts` | `SHARD_COUNT`, `ORBIT_TURNS`, `ORBIT_TILT`, `ORBIT_ROLL` |
-| Bề mặt trăng (hố, biển tối, độ gồ, độ mịn lưới) | `src/components/three/moonGeometry.ts`, `objects/Moon.tsx` | `MARIA`, `RELIEF`, `DISPLACE`, `MOON_DETAIL` |
-| Số hạt lấp lánh, bụi tuyết, vệt mảnh vỡ (theo hạng máy) | `src/config/world.ts` → `BUDGET` | `sparks`, `snow`, `ghosts` |
-| Âm lượng, file âm thanh từng cue | `src/config/audio.ts` | để `null` = âm tổng hợp sẵn; hướng dẫn trong `public/audio/README.md` |
-| Shader (rèm, tia sáng, mây, sao, hạt) | `src/components/three/shaders.ts` | |
-| Câu thoại, chữ trên nút, "Chạm để mở", chú thích "người hướng dẫn" | `src/config/story.ts` | Dùng được `{name}` |
-| Bật/tắt hiện tên khách | `src/config/story.ts` → `showGuestName` | Đang `false` |
-| Danh sách khách | `src/data/guests.json` | |
-| **Thiệp mời:** giờ, ngày, địa điểm, link bản đồ, lời chúc, chữ ký, ảnh | `src/config/invitation.ts` | Ngày dạng `dd/mm/yyyy`, thứ trong tuần tự tính. Lời chúc dùng được `{name}` |
-| Nút "Xác nhận tham dự" | `src/config/invitation.ts` → `rsvp` | `enabled: true` + `url` (Google Form, Messenger…) |
-| File lịch .ics (tiêu đề, mô tả, nhắc trước bao lâu) | `src/config/invitation.ts` → `calendar` | `reminderMinutes: 0` = không nhắc |
-| Vị trí trăng phía sau thiệp | `src/config/invitation.ts` → `moonScreen` | toạ độ màn hình −1..1, dọc / ngang |
-| Nhịp mở thư, tốc độ "viết tay", mũ tốt nghiệp | `src/components/invitation/inviteTimeline.ts` | `PER_CHAR` = giây mỗi ký tự |
-| Font chữ viết tay, font tên khách | `src/app/layout.tsx` | Playwrite VN (`--font-hand`), Love Light (`--font-name`) |
-| Bố cục, màu giấy, cỡ chữ của thiệp | `src/components/scenes/Invitation.module.css` | Cỡ chữ theo `cqi` (% bề rộng thiệp) |
+### Guests
 
-**Xem nhanh một thời điểm:** thêm `?t=6` vào URL (ví dụ `http://localhost:3000/?t=6`), timeline sẽ nhảy tới giây thứ 6 và dừng lại. Dùng để chỉnh từng khung hình.
+Each entry in `src/data/guests.json` is one link:
 
-**Mở thẳng một cảnh:** `?scene=invitation` (ví dụ `http://localhost:3000/huy?scene=invitation`). Kết hợp được với `?t=`: `?scene=invitation&t=5` là thư đã mở, đang ở giây thứ 5.
+```json
+"ban-a": { "name": "bạn A", "self": "mình", "album": "guest" }
+```
 
-**Thay ảnh Năm 1:** bỏ ảnh thật vào `public/images/y1/` (đang là ảnh mẫu), rồi sửa đường dẫn và caption trong `src/data/memories.json`. Thêm năm khác: thêm khối `year2` vào file đó và đổi `PlaceholderScene` thành `Year` trong `src/components/scenes/index.ts`. Xem nhanh: `?scene=year1`, kết hợp `&t=photo2` hoặc `&t=20`.
+| Field | Meaning |
+|---|---|
+| key | The link: `"ban-a"` is `/ban-a` |
+| `name` | How the card addresses them: "Dear {name}," |
+| `self` | How you refer to yourself with them (in Vietnamese this depends on who you're writing to). Default: `mình` |
+| `album` | Which set of photos they see (see below). Without it, the default set |
 
-**Video kỷ niệm (Cloudinary):**
+The entry with an empty key (`""`) is used for `/` and for any link that isn't listed.
 
-1. Cài ffmpeg một lần: `winget install --id Gyan.FFmpeg -e`, rồi mở lại terminal.
-2. Chép video vào `raw-videos/`, tên file là id, ví dụ `raw-videos/guest-y2-nhac-cu.mp4`. Thư mục này không được commit.
-3. Chạy `pnpm upload-videos`. Script nén video, tạo poster, upload và cập nhật `src/data/photos.json`. Thêm `--force` để thay video đã upload.
-4. Sửa `caption` trong `photos.json` nếu là video mới. Muốn lấy poster ở giây khác thì đặt `posterAt` rồi chạy lại với `--force`.
-5. Gắn vào album trong `src/data/memories.json`: `{ "video": "<id>" }`, thêm `altitude` hoặc `focus` nếu cảnh cần.
-6. Commit `photos.json` và `public/images/videos/`, rồi deploy lại.
+Templates in the config files can use `{name}` and `{self}`.
 
-Trên Vercel cần 3 biến `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`. Video trong album của mục khóa rỗng trong `guests.json` (trang `/` và link lạ) thì ai vào trang cũng xem được; album riêng cần đúng slug của khách đó.
+**Groups:** guests keyed `"group/name"` share the group's album and get the link `/group/name`;
+only the name on the card differs. The `"cot"` entry is the group page `/cot`. A new group needs its
+own route folder, like `src/app/cot/`.
 
-**Ảnh riêng cho từng người:**
+### Photos
 
-1. Xuất ảnh WebP, cạnh dài khoảng 1200px, vào `public/images/<album>/y1/` (ví dụ `public/images/phong/y1/01.webp`).
-2. Trong `src/data/memories.json`, thêm vào `albums`: `"phong": { "year1": { "photos": [{ "src": "...", "caption": "..." }] } }`. Chỉ cần ghi năm và mục khác với `default`.
-3. Trong `src/data/guests.json`, thêm `"phong": { "name": "Phong", "self": "mình", "album": "phong" }` (`self` là cách bạn xưng với người đó: `em`, `mình`…; bỏ trống thì là `mình`). Link của người đó là `/phong`.
+`src/data/memories.json` has a `default` set for the four years (title, dialogue, photos with
+captions) and `albums` for anyone who should see different photos. An album only lists the years
+and fields that differ from the default.
 
-**Một nhóm dùng chung album (ví dụ các cốt):** trong `src/data/guests.json`, mục `"cot"` là trang chung `/cot`, còn mỗi người là `"cot/huy": { "name": "Thanh Huy", "self": "mình", "album": "cot" }`, với link `/cot/huy`. Chỉ tên trên thiệp khác nhau. Nhóm mới cần thêm thư mục route giống `src/app/cot/`.
+```json
+"albums": {
+  "friends": {
+    "year1": { "photos": [{ "src": "/images/friends/y1/01.webp", "caption": "Our first trip" }] }
+  }
+}
+```
 
-**Ảnh của bạn:** ba ảnh nền trong suốt trong `public/images/me/` (`small`, `c3`, `now`: nhỏ, lớn, hiện tại), cắt phẳng ở đáy. Kích thước ghi trong `src/data/timeline.ts`. Ảnh mẫu đi kèm chỉ là hình bóng người.
+- Use WebP, about 1200 px on the long edge, at most 8 per year (4 in year 4).
+- Year 3 photos can carry an `altitude` label.
+- `focus` (0 to 1) moves the crop along the photo's long side when a scene shows it square or 5:4.
 
-## Cấu trúc
+**Your own photos on the card** are three transparent cut-outs in `public/images/me/` (`small`,
+`c3`, `now`), cut flat at the bottom; their sizes and labels are in `src/data/timeline.ts`. The
+ones included are placeholder silhouettes.
+
+### Videos (optional)
+
+Videos are hosted on Cloudinary as `authenticated` assets, so they never sit in the repository and
+only play through a signed link from the site's own API route:
+
+- the general album's videos play for everyone;
+- an album's own videos play only from that guest's link.
+
+1. Install ffmpeg (Windows: `winget install --id Gyan.FFmpeg -e`).
+2. Put the video in `raw-videos/`, named after its id: `raw-videos/my-clip.mp4`. This folder is
+   ignored by git.
+3. Add your Cloudinary keys to `.env.local`: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`,
+   `CLOUDINARY_API_SECRET`.
+4. Run `pnpm upload-videos`. It compresses to 720p (kept under Cloudinary's free-plan limit of
+   100 MB), makes a poster, uploads under a random public ID and records it in
+   `src/data/photos.json`.
+5. Set its `caption` in `photos.json`, and add `{ "video": "my-clip" }` to a year in
+   `memories.json`.
+
+Short clips loop. `--force` replaces videos already uploaded; `posterAt` picks the poster's second.
+
+### Look and feel
+
+| To change | File |
+|---|---|
+| Every color, and the light and grading of each scene | `src/config/theme.ts` |
+| Prologue timing, idle animation | `src/config/timing.ts` |
+| Camera path, terrain, moon, particle budgets | `src/config/world.ts` |
+| Pace of each year | `src/components/year/*Timeline.ts` |
+| Layout of each year's 3D scene | `src/components/three/<lake, space, snow, bridge>/*State.ts` |
+| Card tilt, photo heights, transition zones | `src/data/timeline.ts` |
+| Card layout and sizes | `src/components/scenes/Invitation.module.css` |
+| Scene order, navigation labels | `src/components/scenes/index.ts`, `src/config/scenes.ts` |
+| Fonts | `src/app/layout.tsx` |
+| Sound | `src/config/audio.ts`, see `public/audio/README.md` |
+| Link preview image | `public/images/og-invite.jpg` (1200 × 630) |
+
+### Preview helpers
+
+- `?scene=year3` opens a scene directly.
+- `?t=6` jumps 6 seconds into its timeline and freezes there. Most scenes also accept labels, such as
+  `?scene=year2&t=car2`.
+- `?scene=invitation&t=end` shows the opened card; add `&holo=0.5` to freeze its tilt.
+
+## Deploy
+
+Import the repository into Vercel; no build settings are needed.
+
+| Variable | Needed for |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Your domain, e.g. `https://invite.example.com`, so link previews use the right address. On Vercel the production domain is picked up automatically |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Videos only |
+
+Chat apps keep a link's preview once they've seen it. After changing the preview image, a link
+that was already shared shows the old one until the app refreshes it.
+
+## Project structure
 
 ```
-src/config/            theme.ts (mọi màu + grading) · story.ts · timing.ts · world.ts (3D) · invitation.ts (thiệp) · audio.ts
-src/data/guests.json
-src/app/               page.tsx (/) · [slug]/page.tsx · og/route.tsx (ảnh OG)
+src/app/                 page.tsx (/) · [slug] (one guest) · cot/ (a group) · api/video-url (signed video links)
+src/config/              theme · story · invitation · timing · world · audio · scenes
+src/data/                guests.json · memories.json · photos.json (videos) · timeline.ts (the card's photos)
 src/components/
-  Story.tsx            điều phối cảnh
-  scenes/              index.ts (thứ tự cảnh) · Prologue (3D + fallback) · Invitation (phong thư → thiệp) · PlaceholderScene
-                       Scene0Curtain · Scene1Moon (bản SVG khi không có WebGL)
-  three/               Stage3D (Canvas) · prologueTimeline (GSAP master timeline) · stage.ts (state chung)
-                       CameraRig · Atmosphere · Effects · shaders.ts
-    objects/           Sky · Terrain · Moon · LightCone · Crystal (+ Trail, Sparks, Shards) · Rings · Snow
-                       Curtain3D · StickFigure3D · Motes
-                       shards.ts (quỹ đạo mảnh vỡ dùng chung cho mảnh, vệt và phản ứng của trăng)
-  year/                yearTimeline.ts · spaceTimeline.ts · snowTimeline.ts · bridgeTimeline.ts (GSAP) · Lightbox
-  three/bridge/        BridgeStage3D (camera, đèn trời) · Bridge (ván, lan can, tia sáng) · Island · Boards · Traveler · bridgeState
-  three/snow/          SnowStage3D (camera, mây, rơi xuyên mây) · Mountain · Hiker · Stations (khối băng, đèn, cờ, cột mốc) · Snowfall · snowState
-  three/space/         SpaceStage3D · Cosmos (trời, sao, biển mây, hành tinh) · Track · Train (tàu cao tốc) · spaceState
-  three/lake/          LakeStage3D · Water · Boat (người dẫn, mái chèo, đèn lồng) · Photos (polaroid) · lakeState
-  invitation/          Art.tsx (dấu sapphire, phong thư, icon, mũ — SVG) · inviteTimeline.ts (GSAP)
-  three/InviteStage3D  nền trời đêm + trăng xanh của cảnh thiệp
-src/lib/               ics.ts (tạo file lịch) · format.ts (điền {name})
-src/lib/audio/         sfx.ts (Web Audio, bật/tắt, nhớ lựa chọn) · synth.ts (âm placeholder)
-  characters/          SpeechBubble (viền vẽ tay, gõ chữ) · StickFigure (bản SVG)
-  ui/                  NextButton · SkipButton
+  Story.tsx              scene manager: next scene, jumps from the bar, the address
+  scenes/                one component per scene, plus 2D fallbacks
+  three/                 the 3D scenes: prologue, lake, space, snow, bridge, invitation sky
+  year/                  timelines of the four years · Lightbox (photos and videos)
+  invitation/            envelope art · HologramPhoto (the tilting card photo)
+  ui/                    SceneNav (glass bar) · buttons · sound toggle
+src/lib/                 guests · memories · audio (Web Audio) · calendar file · device tilt
+scripts/                 upload-videos.mjs
 ```
 
-**Thêm cảnh mới:** tạo component nhận `SceneProps` (`src/components/scenes/types.ts`), rồi thay placeholder tương ứng trong `src/components/scenes/index.ts`.
+## License
 
-## Giấy phép
+Released under the [MIT License](LICENSE). Copyright (c) 2026 SaphirMoon.
 
-Mã nguồn phát hành theo giấy phép [MIT](LICENSE), Copyright (c) 2026 SaphirMoon. Ai cũng được dùng, sửa và phân phối lại, miễn là giữ nguyên dòng bản quyền và nội dung giấy phép trong mọi bản sao.
+You're free to use, modify and share this project, including commercially, as long as the
+copyright notice and the license text stay in every copy.
